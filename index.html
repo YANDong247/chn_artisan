@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>欢迎来到匠作琉光</title>
+  <style>
+    :root {
+      --bg-0: #050506;
+      --bg-1: #0d1015;
+      --ink-0: #f2ece2;
+      --ink-1: #b8ad9f;
+      --accent: #df9c62;
+      --line: rgba(255, 232, 210, 0.2);
+      --card: rgba(22, 24, 30, 0.7);
+      --shadow: 0 18px 42px rgba(0, 0, 0, 0.46);
+      --radius: 24px;
+      --ease: 420ms cubic-bezier(.23, 1, .32, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+      color: var(--ink-0);
+      background:
+        radial-gradient(900px 420px at 50% -4%, rgba(223, 156, 98, 0.24), transparent 64%),
+        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, #07090d 100%);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.3;
+      background-image:
+        radial-gradient(circle at 18% 30%, rgba(255, 204, 156, 0.12) 1px, transparent 1.1px),
+        radial-gradient(circle at 76% 70%, rgba(220, 149, 96, 0.1) 1px, transparent 1.1px);
+      background-size: 22px 22px, 24px 24px;
+    }
+
+    .aurora {
+      position: fixed;
+      inset: -20vh -10vw;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(22px);
+      opacity: 0.5;
+      animation: breathe 9s ease-in-out infinite;
+    }
+
+    .aurora::before,
+    .aurora::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      mix-blend-mode: screen;
+    }
+
+    .aurora::before {
+      width: min(58vw, 560px);
+      aspect-ratio: 1;
+      left: 5%;
+      top: 8%;
+      background: radial-gradient(circle, rgba(224, 143, 81, 0.46), rgba(224, 143, 81, 0));
+      animation: driftA 16s ease-in-out infinite alternate;
+    }
+
+    .aurora::after {
+      width: min(62vw, 620px);
+      aspect-ratio: 1;
+      right: 0;
+      bottom: 4%;
+      background: radial-gradient(circle, rgba(129, 95, 169, 0.2), rgba(129, 95, 169, 0));
+      animation: driftB 18s ease-in-out infinite alternate;
+    }
+
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .sparkles span {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255, 222, 190, 0.75);
+      box-shadow: 0 0 8px rgba(255, 182, 120, 0.45);
+      animation: floatDown linear infinite;
+    }
+
+    .sparkles span:nth-child(1) { left: 8%; top: -20px; animation-duration: 15s; animation-delay: -2s; }
+    .sparkles span:nth-child(2) { left: 19%; top: -26px; animation-duration: 12s; animation-delay: -6s; }
+    .sparkles span:nth-child(3) { left: 33%; top: -24px; animation-duration: 17s; animation-delay: -4s; }
+    .sparkles span:nth-child(4) { left: 48%; top: -20px; animation-duration: 13s; animation-delay: -8s; }
+    .sparkles span:nth-child(5) { left: 64%; top: -28px; animation-duration: 16s; animation-delay: -3s; }
+    .sparkles span:nth-child(6) { left: 76%; top: -22px; animation-duration: 14s; animation-delay: -9s; }
+    .sparkles span:nth-child(7) { left: 88%; top: -26px; animation-duration: 18s; animation-delay: -5s; }
+
+    .wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .welcome-card {
+      width: min(680px, 100%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      padding: clamp(24px, 6vw, 48px);
+      text-align: center;
+      transform: translateY(14px);
+      opacity: 0;
+      animation: enter 900ms var(--ease) forwards;
+    }
+
+    .kicker {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.75rem;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0;
+      line-height: 1.08;
+      font-size: clamp(2rem, 10vw, 4.3rem);
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 16px auto 0;
+      max-width: 34ch;
+      color: var(--ink-1);
+      line-height: 1.8;
+      font-size: 0.98rem;
+    }
+
+    .actions {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border-radius: 999px;
+      text-decoration: none;
+      padding: 11px 18px;
+      font-size: 0.92rem;
+      transition: transform var(--ease), background var(--ease), color var(--ease), border-color var(--ease);
+    }
+
+    .btn.primary {
+      background: #f1e7db;
+      color: #1b1511;
+      border: 1px solid #f1e7db;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--ink-0);
+      border: 1px solid var(--line);
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    @keyframes enter {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes driftA {
+      0% { transform: translate3d(-4%, 2%, 0) scale(1); }
+      100% { transform: translate3d(8%, -3%, 0) scale(1.08); }
+    }
+
+    @keyframes driftB {
+      0% { transform: translate3d(2%, -3%, 0) scale(1); }
+      100% { transform: translate3d(-7%, 4%, 0) scale(1.12); }
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.42; }
+      50% { opacity: 0.58; }
+    }
+
+    @keyframes floatDown {
+      0% { transform: translateY(0) scale(0.85); opacity: 0; }
+      15% { opacity: 0.8; }
+      85% { opacity: 0.5; }
+      100% { transform: translateY(115vh) scale(1.12); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .welcome-card,
+      .aurora,
+      .aurora::before,
+      .aurora::after,
+      .sparkles span {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="sparkles" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+  <div class="grain"></div>
+  <main class="wrap">
+    <section class="welcome-card">
+      <div class="kicker">Welcome</div>
+      <h1>欢迎来到<br />匠作琉光</h1>
+      <div class="actions">
+        <a class="btn primary" href="main.html">进入主页</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

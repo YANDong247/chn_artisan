@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>匠作琉光 | 手机端 H5</title>
+  <style>
+    :root {
+      --bg-0: #070708;
+      --bg-1: #111216;
+      --ink-0: #f2ece2;
+      --ink-1: #b7ac9f;
+      --accent: #db9960;
+      --accent-soft: #e4b88f;
+      --card: rgba(22, 23, 28, 0.72);
+      --line: rgba(255, 236, 213, 0.16);
+      --shadow: 0 14px 36px rgba(0, 0, 0, 0.42);
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --space-1: 10px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 36px;
+      --space-5: 56px;
+      --space-6: 76px;
+      --text-sm: 0.86rem;
+      --text-md: 1rem;
+      --text-lg: 1.22rem;
+      --text-xl: clamp(1.95rem, 8vw, 3.3rem);
+      --text-display: clamp(2.5rem, 13vw, 5.6rem);
+      --max: 1080px;
+      --ease: 440ms cubic-bezier(.23,1,.32,1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+      color: var(--ink-0);
+      background: #000;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.3;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255, 206, 158, 0.12) 0.9px, transparent 1px),
+        radial-gradient(circle at 73% 64%, rgba(222, 151, 97, 0.1) 0.9px, transparent 1px);
+      background-size: 22px 22px, 24px 24px;
+      z-index: 1;
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: var(--space-3) var(--space-2) var(--space-6);
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(8px);
+      margin: 0 calc(var(--space-2) * -1);
+      padding: var(--space-1) var(--space-2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid transparent;
+      transition: border-color 240ms ease;
+    }
+
+    .nav.scrolled {
+      border-color: var(--line);
+      background: rgba(8, 9, 12, 0.72);
+    }
+
+    .brand {
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+      color: var(--ink-1);
+    }
+
+    .brand:hover { color: var(--ink-0); }
+
+    .cta-mini {
+      border: 1px solid var(--ink-0);
+      color: var(--ink-0);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      padding: 7px 12px;
+      border-radius: 999px;
+      transition: background var(--ease), color var(--ease);
+    }
+
+    .cta-mini:hover { background: var(--ink-0); color: #18120f; }
+
+    .hero {
+      min-height: 82vh;
+      display: grid;
+      align-items: end;
+      padding: var(--space-6) 0 var(--space-5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .halo {
+      position: absolute;
+      width: 72vw;
+      aspect-ratio: 1;
+      left: 50%;
+      top: 10%;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(230, 152, 85, 0.36), rgba(255, 245, 233, 0) 66%);
+      filter: blur(3px);
+      pointer-events: none;
+    }
+
+    .hero h1 {
+      margin: 0;
+      line-height: 0.92;
+      font-size: var(--text-display);
+      max-width: 14ch;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin-top: var(--space-2);
+      max-width: 28ch;
+      color: var(--ink-1);
+      font-size: var(--text-md);
+      line-height: 1.72;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 11px 18px;
+      font-size: 0.92rem;
+      text-decoration: none;
+      transition: transform var(--ease), background var(--ease), color var(--ease);
+    }
+
+    .btn.primary {
+      background: #f1e7db;
+      color: #1a1511;
+      box-shadow: var(--shadow);
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--ink-0);
+      border: 1px solid var(--line);
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .kicker {
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--accent);
+      font-size: 0.72rem;
+      margin-bottom: var(--space-1);
+    }
+
+    section {
+      margin-top: var(--space-6);
+    }
+
+    #collection {
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      margin: 0 0 var(--space-2);
+      line-height: 1.1;
+    }
+
+    .story {
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .story p {
+      color: var(--ink-1);
+      line-height: 1.82;
+      margin: 0;
+      max-width: 60ch;
+    }
+
+    .cards {
+      display: grid;
+      gap: var(--space-2);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      box-shadow: var(--shadow);
+      min-height: 168px;
+    }
+
+    .card strong {
+      display: block;
+      font-size: var(--text-lg);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .card p {
+      color: var(--ink-1);
+      margin: 0;
+      line-height: 1.65;
+      font-size: 0.94rem;
+    }
+
+    .showcase {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+
+    .tile {
+      border-radius: var(--radius-md);
+      border: 1px solid var(--line);
+      min-height: clamp(360px, 66vh, 720px);
+      padding: 14px;
+      display: flex;
+      align-items: end;
+      box-shadow: var(--shadow);
+      color: #fff;
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .tile.one {
+      grid-column: span 7;
+      background-image: url("pic/核雕main_01.jpg");
+    }
+    .tile.two { grid-column: span 5; background-image: url("pic/鼻烟壶_006.jpg"); }
+    .tile.three { grid-column: span 5; background-image: linear-gradient(150deg, #725c42, #b7976f); }
+    .tile.four { grid-column: span 7; background-image: linear-gradient(150deg, #9c5f38, #cc9d6e); }
+
+    .quote {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      color: var(--ink-0);
+      line-height: 1.7;
+      box-shadow: var(--shadow);
+    }
+
+    .faq {
+      border-top: 1px solid var(--line);
+    }
+
+    details {
+      border-bottom: 1px solid var(--line);
+      padding: 14px 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 0.98rem;
+      font-weight: 600;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    details p {
+      margin: 10px 0 0;
+      color: var(--ink-1);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .final-cta {
+      margin-top: var(--space-6);
+      padding: var(--space-4);
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(170deg, rgba(255,255,255,0.06), rgba(230,152,85,0.14));
+      box-shadow: var(--shadow);
+    }
+
+    .final-cta p {
+      color: var(--ink-1);
+      max-width: 34ch;
+      line-height: 1.72;
+    }
+
+    .final-cta .btn {
+      margin-top: 8px;
+      display: inline-block;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 620ms ease, transform 620ms ease;
+      transition-delay: var(--delay, 0ms);
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 760px) {
+      .cards { grid-template-columns: 1fr; }
+      .tile.one,
+      .tile.two,
+      .tile.three,
+      .tile.four { grid-column: span 12; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="page">
+    <nav class="nav" id="topNav">
+      <a class="brand" href="index.html">CRAFT STUDIO</a>
+      <!-- <a class="cta-mini" href="#collection">查看系列</a> -->
+    </nav>
+
+    <section id="collection" class="reveal" style="--delay:120ms">
+      <!-- <div class="kicker">Collection</div> -->
+      <!-- <h2>本季系列</h2> -->
+      <div class="showcase">
+        <div class="tile one">核雕</div>
+        <a class="tile two" href="byh/byh_main.html">鼻烟壶</a>
+        <div class="tile three">石章</div>
+        <div class="tile four">剪纸</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+        }
+      });
+    }, { threshold: 0.16 });
+
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+    const topNav = document.getElementById('topNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 8) {
+        topNav.classList.add('scrolled');
+      } else {
+        topNav.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>
