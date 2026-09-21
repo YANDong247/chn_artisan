@@ -222,8 +222,8 @@
     .highlights-rail {
       display: grid;
       grid-auto-flow: column;
-      grid-auto-columns: minmax(380px, 92vw);
-      gap: 12px;
+      grid-auto-columns: minmax(456px, 588px);
+      gap: 18px;
       overflow-x: auto;
       padding: 4px 2px 12px;
       scroll-snap-type: x mandatory;
@@ -496,8 +496,8 @@
 
     /* ===== 手串区：正方形卡片 ===== */
     #handstrands .highlights-rail {
-      grid-auto-columns: minmax(456px, 588px);
-      gap: 18px;
+      grid-auto-columns: minmax(380px, 92vw);
+      gap: 12px;
     }
 
     #handstrands .highlight-card {
@@ -516,7 +516,7 @@
 
     @media (max-width: 860px) {
       #handstrands .highlights-rail {
-        grid-auto-columns: minmax(336px, 92vw);
+        grid-auto-columns: 92vw;
       }
       #handstrands .highlight-card {
         min-height: 0;
