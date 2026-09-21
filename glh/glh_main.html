@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>橄榄核雕 · 琉璃藏境</title>
+  <style>
+    :root {
+      --bg: #060709;
+      --bg-soft: #0f1319;
+      --ink: #f5f4f0;
+      --ink-soft: #b6bec9;
+      --line: rgba(255, 255, 255, 0.14);
+      --gold: #d7a46f;
+      --gold-soft: #f0c18c;
+      --card: rgba(20, 24, 31, 0.72);
+      --radius: 22px;
+      --shadow: 0 22px 48px rgba(0, 0, 0, 0.45);
+      --max: 1180px;
+      --ease: 480ms cubic-bezier(.22, 1, .36, 1);
+      --title: clamp(2.2rem, 10vw, 6.3rem);
+      --subtitle: clamp(1.4rem, 5vw, 2.2rem);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(1200px 540px at 50% -6%, rgba(247, 183, 117, 0.16), transparent 60%),
+        linear-gradient(180deg, #050608 0%, #0a0d12 36%, #0f141b 68%, #090b10 100%);
+      color: var(--ink);
+      font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+    }
+
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        radial-gradient(circle at 14% 18%, rgba(255, 215, 174, 0.12) 1px, transparent 1px),
+        radial-gradient(circle at 76% 72%, rgba(226, 178, 129, 0.1) 1px, transparent 1px);
+      background-size: 24px 24px, 22px 22px;
+      z-index: 1;
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 18px 80px;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--ease), background var(--ease);
+    }
+
+    .nav.scrolled {
+      border-color: var(--line);
+      background: rgba(8, 11, 16, 0.72);
+    }
+
+    .logo {
+      text-decoration: none;
+      color: var(--ink);
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .buy-mini {
+      text-decoration: none;
+      color: var(--ink);
+      background: #000;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.82rem;
+      border: 1px solid var(--line);
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-content: end;
+      gap: 20px;
+      padding: 72px 0 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 12% -12% 0;
+      background:
+        radial-gradient(circle at 55% 40%, rgba(255, 198, 136, 0.24), transparent 50%),
+        radial-gradient(circle at 18% 70%, rgba(144, 188, 255, 0.16), transparent 56%);
+      filter: blur(16px);
+      pointer-events: none;
+    }
+
+    .hero-kicker {
+      color: var(--gold);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 6.6vw, 4.6rem);
+      line-height: 0.94;
+      letter-spacing: -0.02em;
+      max-width: none;
+      white-space: nowrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 34ch;
+      color: var(--ink-soft);
+      line-height: 1.78;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-img {
+      width: min(540px, 86vw);
+      justify-self: end;
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      transform: translateY(12px);
+      opacity: 0;
+      animation: floatIn 1s var(--ease) 120ms forwards;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      transition: transform var(--ease), background var(--ease), color var(--ease);
+    }
+
+    .btn.primary {
+      background: linear-gradient(160deg, var(--gold-soft), var(--gold));
+      color: #20150f;
+      box-shadow: var(--shadow);
+    }
+
+    .btn.ghost {
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    section { margin-top: 74px; }
+
+    #highlights {
+      margin-top: 0;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: var(--subtitle);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    .copy {
+      margin: 0;
+      color: var(--ink-soft);
+      line-height: 1.76;
+      max-width: 62ch;
+    }
+
+    .highlights-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .highlights-head p {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 0.92rem;
+    }
+
+    .highlights-rail {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(380px, 92vw);
+      gap: 12px;
+      overflow-x: auto;
+      padding: 4px 2px 12px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+
+    .highlights-pagination {
+      margin-top: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .page-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 0;
+      padding: 0;
+      background: rgba(255, 255, 255, 0.28);
+      cursor: pointer;
+      transition: transform 220ms ease, background 220ms ease;
+    }
+
+    .page-dot.active {
+      background: var(--gold-soft);
+      transform: scale(1.35);
+    }
+
+    .highlight-card {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      min-height: 78vh;
+      scroll-snap-align: start;
+      background: #111;
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .highlight-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      cursor: zoom-in;
+      transform: scale(1.02);
+      transition: transform 700ms var(--ease);
+    }
+
+    .highlight-card:hover img {
+      transform: scale(1.07);
+    }
+
+    body.lightbox-open { overflow: hidden; }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      overflow: auto;
+      background: rgba(3, 5, 8, 0.9);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 220ms ease, visibility 220ms ease;
+    }
+
+    .lightbox.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox img {
+      display: block;
+      max-width: min(192vw, 3000px);
+      max-height: 180vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.6);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 18px;
+      right: 22px;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--ink);
+      font-size: 1.7rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .lightbox-caption {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      max-width: calc(100% - 40px);
+      color: var(--ink-soft);
+      text-align: center;
+      font-size: 0.86rem;
+    }
+
+    .highlight-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(8, 10, 14, 0.06), rgba(8, 10, 14, 0.58));
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .highlight-card span {
+      position: absolute;
+      left: 14px;
+      bottom: 12px;
+      z-index: 2;
+      font-size: 0.86rem;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+    }
+
+    .spec {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 22px;
+    }
+
+    .spec article {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .spec strong {
+      display: block;
+      font-size: 1.18rem;
+      margin-bottom: 6px;
+      color: var(--gold-soft);
+    }
+
+    .gallery {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      margin-top: 20px;
+    }
+
+    .shot {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      position: relative;
+      min-height: 220px;
+      background: #111;
+    }
+
+    .shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.03);
+      transition: transform 700ms var(--ease);
+    }
+
+    .shot:hover img { transform: scale(1.08); }
+
+    .shot.a { grid-column: span 7; min-height: 460px; }
+    .shot.b { grid-column: span 5; min-height: 460px; }
+    .shot.c { grid-column: span 5; min-height: 320px; }
+    .shot.d { grid-column: span 7; min-height: 320px; }
+
+    .storyline {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .storyline article {
+      border-left: 2px solid rgba(215, 164, 111, 0.5);
+      padding: 6px 0 6px 14px;
+    }
+
+    .price {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.03), rgba(215, 164, 111, 0.12)),
+        var(--card);
+      padding: 24px;
+      margin-top: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .price strong {
+      font-size: clamp(1.8rem, 8vw, 3rem);
+      color: var(--gold-soft);
+      letter-spacing: -0.02em;
+    }
+
+    .price p {
+      color: var(--ink-soft);
+      margin: 8px 0 16px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 620ms ease, transform 620ms ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        min-height: 86vh;
+        align-content: center;
+      }
+
+      .hero-img {
+        justify-self: start;
+        width: min(520px, 92vw);
+      }
+
+      .shot.a,
+      .shot.b,
+      .shot.c,
+      .shot.d {
+        grid-column: span 12;
+        min-height: 320px;
+      }
+
+      .highlights-rail {
+        grid-auto-columns: 92vw;
+        padding-left: 4vw;
+        padding-right: 4vw;
+        scroll-padding-left: 4vw;
+        scroll-padding-right: 4vw;
+      }
+
+      .highlight-card {
+        min-height: 70vh;
+        scroll-snap-align: center;
+      }
+    }
+
+    /* ===== 手串区：正方形卡片 ===== */
+    #handstrands .highlights-rail {
+      grid-auto-columns: minmax(456px, 588px);
+      gap: 18px;
+    }
+
+    #handstrands .highlight-card {
+      min-height: 0;
+      aspect-ratio: 1 / 1;
+      border-radius: 18px;
+    }
+
+    #handstrands .highlight-card img {
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    @media (max-width: 860px) {
+      #handstrands .highlights-rail {
+        grid-auto-columns: minmax(336px, 92vw);
+      }
+      #handstrands .highlight-card {
+        min-height: 0;
+        aspect-ratio: 1 / 1;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="page">
+    <nav class="nav" id="nav">
+      <a class="logo" href="#top">橄榄核雕</a>
+      <a class="buy-mini" href="../main.html">回到主页</a>
+    </nav>
+
+    <section class="reveal" id="highlights">
+      <div class="highlights-head">
+        <h2>单核</h2>
+        <!-- <p>左右横划，查看鼻烟壶细节。</p> -->
+      </div>
+      <div class="highlights-rail" aria-label="鼻烟壶横向图片展示">
+        <figure class="highlight-card"><img src="pic/d001_核舟_001.jpg" alt="鼻烟壶高光图 1" /><span>核舟记</span></figure>
+        <figure class="highlight-card"><img src="pic/d002_关羽_001.jpg" alt="鼻烟壶高光图 2" /><span>关羽</span></figure>
+        <figure class="highlight-card"><img src="pic/d006_弥勒佛_001.jpg" alt="鼻烟壶高光图 3" /><span>弥勒佛</span></figure>
+        <figure class="highlight-card"><img src="pic/d007_镂空寿星_001.jpg" alt="鼻烟壶高光图 4" /><span>寿星</span></figure>
+        <figure class="highlight-card"><img src="pic/d008_刘海戏金蟾_001.jpg" alt="鼻烟壶高光图 5" /><span>刘海戏金蟾</span></figure>
+        <figure class="highlight-card"><img src="pic/d010_其他_001.jpg" alt="鼻烟壶高光图 6" /><span>  </span></figure>
+      </div>
+      <div class="highlights-pagination" aria-label="轮播分页指示器">
+        <button class="page-dot active" type="button" aria-label="第 1 张"></button>
+        <button class="page-dot" type="button" aria-label="第 2 张"></button>
+        <button class="page-dot" type="button" aria-label="第 3 张"></button>
+        <button class="page-dot" type="button" aria-label="第 4 张"></button>
+        <button class="page-dot" type="button" aria-label="第 5 张"></button>
+        <button class="page-dot" type="button" aria-label="第 6 张"></button>
+      </div>
+    </section>
+
+    <section class="reveal" id="handstrands">
+      <div class="highlights-head">
+        <h2>手串</h2>
+      </div>
+      <div class="highlights-rail" aria-label="手串横向图片展示">
+        <figure class="highlight-card"><img src="pic/c006_十八罗汉头_长串_周福林.jpg" alt="c006十八罗汉" /><span>十八罗汉</span></figure>
+        <figure class="highlight-card"><img src="pic/c007_十八罗汉头_长串_周福林.jpg" alt="c007十八罗汉" /><span>十八罗汉</span></figure>
+        <figure class="highlight-card"><img src="pic/c014_罗汉_长串_史忠明.jpg" alt="c014罗汉" /><span>罗汉</span></figure>
+        <figure class="highlight-card"><img src="pic/c019_十八罗汉头_长串_种年福.jpg" alt="c019十八罗汉" /><span>十八罗汉</span></figure>
+        <figure class="highlight-card"><img src="pic/c029_十八罗汉头_长串_周福林01.jpg" alt="c029十八罗汉" /><span>十八罗汉</span></figure>
+        <figure class="highlight-card"><img src="pic/c035_十八罗汉头_长串_朱东琴.jpg" alt="c035十八罗汉" /><span>十八罗汉</span></figure>
+      </div>
+      <div class="highlights-pagination" aria-label="轮播分页指示器">
+        <button class="page-dot active" type="button" aria-label="第 1 张"></button>
+        <button class="page-dot" type="button" aria-label="第 2 张"></button>
+        <button class="page-dot" type="button" aria-label="第 3 张"></button>
+        <button class="page-dot" type="button" aria-label="第 4 张"></button>
+        <button class="page-dot" type="button" aria-label="第 5 张"></button>
+        <button class="page-dot" type="button" aria-label="第 6 张"></button>
+      </div>
+    </section>
+
+    <section class="reveal" id="buy" hidden>
+      <h2>收藏款 · 鼻烟壶 006</h2>
+      <div class="price">
+        <strong>¥ 1,680</strong>
+        <p>含定制礼盒、鉴定卡与一年养护建议。支持线上预约与线下鉴赏。</p>
+        <a class="btn primary" href="#top">立即预订</a>
+      </div>
+    </section>
+  </div>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="图片预览" aria-hidden="true">
+    <button class="lightbox-close" type="button" aria-label="关闭图片预览">&times;</button>
+    <img id="lightbox-image" alt="" />
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+
+  <script>
+    const nav = document.getElementById("nav");
+    window.addEventListener("scroll", () => {
+      nav.classList.toggle("scrolled", window.scrollY > 10);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in");
+        }
+      });
+    }, { threshold: 0.16 });
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCaption = document.getElementById("lightbox-caption");
+    const lightboxClose = lightbox.querySelector(".lightbox-close");
+
+    const closeLightbox = () => {
+      lightbox.classList.remove("is-open");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("lightbox-open");
+      lightboxImage.removeAttribute("src");
+    };
+
+    document.querySelectorAll(".highlight-card img").forEach((image) => {
+      image.addEventListener("click", () => {
+        lightboxImage.src = image.currentSrc || image.src;
+        lightboxImage.alt = image.alt;
+        lightboxCaption.textContent = image.alt;
+        lightbox.classList.add("is-open");
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.classList.add("lightbox-open");
+        lightboxClose.focus();
+      });
+    });
+
+    lightboxClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && lightbox.classList.contains("is-open")) {
+        closeLightbox();
+      }
+    });
+
+    const rail = document.querySelector(".highlights-rail");
+    const cards = rail ? Array.from(rail.querySelectorAll(".highlight-card")) : [];
+    const dots = Array.from(document.querySelectorAll(".page-dot"));
+
+    const setActiveDot = (index) => {
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === index);
+      });
+    };
+
+    if (rail && cards.length && dots.length) {
+      dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+          cards[index].scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+          setActiveDot(index);
+        });
+      });
+
+      rail.addEventListener("scroll", () => {
+        const left = rail.scrollLeft;
+        let nearest = 0;
+        let minDist = Number.POSITIVE_INFINITY;
+
+        cards.forEach((card, index) => {
+          const dist = Math.abs(card.offsetLeft - left);
+          if (dist < minDist) {
+            minDist = dist;
+            nearest = index;
+          }
+        });
+
+        setActiveDot(nearest);
+      }, { passive: true });
+    }
+  </script>
+</body>
+</html>
